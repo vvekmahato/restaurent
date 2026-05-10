@@ -1,0 +1,419 @@
+:root {
+    --primary-color: #c5a059; /* Gold */
+    --dark-bg: #1a1a1a;
+    --light-text: #f4f4f4;
+    --dark-text: #333;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--dark-text);
+    scroll-behavior: smooth;
+}
+
+/* Navigation */
+header {
+    background: var(--dark-bg);
+    color: #fff;
+    padding: 1rem 5%;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.logo span {
+    color: var(--primary-color);
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.nav-links li a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 2rem;
+    transition: color 0.3s;
+}
+
+.nav-links li a:hover {
+    color: var(--primary-color);
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1500&q=80');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+}
+
+.hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.btn {
+    display: inline-block;
+    background: var(--primary-color);
+    color: #fff;
+    padding: 0.8rem 2rem;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 1.5rem;
+    transition: transform 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+/* Menu Section */
+.menu-section {
+    padding: 5rem 10%;
+    background: #fff;
+}
+
+.view-more-container {
+    text-align: center;
+    margin-top: 3rem;
+}
+
+/* Full Menu List Styling */
+.menu-list-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.menu-list-item {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed #ddd;
+}
+
+.menu-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.menu-list-header h3 {
+    font-family: 'Playfair Display', serif;
+}
+
+.section-title {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+}
+
+/* Filter Buttons */
+.filter-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.filter-btn {
+    background: none;
+    border: 1px solid var(--primary-color);
+    color: var(--dark-text);
+    padding: 0.5rem 1.5rem;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: inherit;
+    transition: all 0.3s;
+}
+
+.filter-btn.active, 
+.filter-btn:hover {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.menu-item {
+    text-align: center;
+    padding: 1rem;
+    border: 1px solid #eee;
+    border-radius: 10px;
+}
+
+.menu-item.hide, .menu-list-item.hide {
+    display: none;
+}
+
+.menu-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.price {
+    display: block;
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+}
+
+/* Contact Section */
+.contact-section {
+    padding: 5rem 10%;
+    background: #f9f9f9;
+}
+
+.contact-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    margin-top: 2rem;
+}
+
+.contact-info, .contact-form {
+    flex: 1;
+    min-width: 300px;
+}
+
+.contact-form input, .contact-form textarea {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+footer {
+    background: var(--dark-bg);
+    color: #fff;
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Chatbot Styles */
+.chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 2000;
+}
+
+.chat-toggle-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+}
+
+/* Chat Callout Bubble */
+.chat-callout {
+    position: absolute;
+    bottom: 85px;
+    right: 0;
+    background: white;
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    font-size: 0.85rem;
+    white-space: nowrap;
+    color: var(--dark-text);
+    border-left: 4px solid var(--primary-color);
+    z-index: 1999;
+    animation: bubbleFadeIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+}
+
+.chat-callout::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    right: 20px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid white;
+}
+
+@keyframes bubbleFadeIn {
+    from { opacity: 0; transform: translateY(10px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.chat-toggle-btn:hover {
+    transform: scale(1.1);
+}
+
+.chat-window {
+    display: none;
+    flex-direction: column;
+    width: 320px;
+    height: 450px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    overflow: hidden;
+}
+
+.chat-header {
+    background: var(--dark-bg);
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-body {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    background: #fdfdfd;
+}
+
+.message {
+    padding: 0.6rem 1rem;
+    border-radius: 15px;
+    max-width: 85%;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.bot-message {
+    background: #eee;
+    align-self: flex-start;
+}
+
+.user-message {
+    background: var(--primary-color);
+    color: white;
+    align-self: flex-end;
+}
+
+/* Chat Suggestions */
+.chat-suggestions {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    overflow-x: auto;
+    background: #fdfdfd;
+    border-top: 1px solid #eee;
+    scrollbar-width: none; /* Firefox */
+}
+
+.chat-suggestions::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+.suggestion-btn {
+    background: white;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.suggestion-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.chat-footer {
+    padding: 1rem;
+    display: flex;
+    border-top: 1px solid #eee;
+}
+
+.chat-footer input {
+    flex: 1;
+    padding: 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+}
+
+.chat-footer button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.6rem 1rem;
+    margin-left: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Mobile Menu */
+.hamburger {
+    display: none;
+    cursor: pointer;
+}
+
+.hamburger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: #fff;
+    margin: 5px;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; /* Logic for toggle can be added in JS */
+    }
+    .hamburger {
+        display: block;
+    }
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Gilded Fork | Fine Dining</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">Gilded<span>Fork</span></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#about">Our Story</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Exquisite Flavors, Timeless Moments</h1>
+                <p>Experience the art of culinary perfection in the heart of the city.</p>
+                <a href="#menu" class="btn">View Menu</a>
+            </div>
+        </section>
+
+        <section id="menu" class="menu-section">
+            <h2 class="section-title">Our Signature Menu</h2>
+
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="appetizers">Appetizers</button>
+                <button class="filter-btn" data-filter="mains">Main Course</button>
+            </div>
+
+            <div class="menu-grid">
+                <!-- Dynamic items will load here (limited to 4) -->
+            </div>
+
+            <div class="view-more-container">
+                <a href="menu.html" class="btn">View Full Menu</a>
+            </div>
+        </section>
+    </main>
+
+    <section id="contact" class="contact-section">
+        <h2>Visit Us</h2>
+        <div class="contact-container">
+            <div class="contact-info">
+                <p>123 Culinary Ave, Foodie City</p>
+                <p>Reservations: (555) 123-4567</p>
+                <p>Open Daily: 5:00 PM - 11:00 PM</p>
+            </div>
+            <form class="contact-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Your Message or Reservation Details" rows="5"></textarea>
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 The Gilded Fork. Built with passion.</p>
+    </footer>
+
+    <!-- Chatbot UI -->
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <span>Your Digital Waiter</span>
+                <button id="closeChat">&times;</button>
+            </div>
+            <div class="chat-body" id="chatBody">
+                <div class="message bot-message">Good evening! I am your digital waiter for tonight. May I start you off with a recommendation from our signature menu?</div>
+            </div>
+            <div class="chat-suggestions" id="chatSuggestions">
+                <button class="suggestion-btn">What's special today?</button>
+                <button class="suggestion-btn">Book a table</button>
+                <button class="suggestion-btn">Any vegan options?</button>
+                <button class="suggestion-btn">Opening hours</button>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="chatInput" placeholder="Type a message...">
+                <button id="sendChat">Send</button>
+            </div>
+        </div>
+        <div class="chat-callout" id="chatCallout">Welcome sir, I'm your digital waiter! How can I help?</div>
+        <button class="chat-toggle-btn" id="chatToggleBtn">🤵</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

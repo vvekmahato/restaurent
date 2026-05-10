@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | The Gilded Fork</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-section { padding: 8rem 5% 5rem; min-height: 80vh; background: #f4f4f4; display: flex; flex-direction: column; gap: 2rem; }
+        .admin-card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 2px solid var(--primary-color); padding-bottom: 1rem; }
+        
+        .admin-tabs { display: flex; gap: 1rem; border-bottom: 1px solid #ddd; padding-bottom: 1rem; margin-bottom: 1rem; }
+        .tab-btn { background: #eee; border: none; padding: 0.8rem 1.5rem; border-radius: 5px; cursor: pointer; font-weight: 600; color: #666; transition: 0.3s; }
+        .tab-btn.active { background: var(--primary-color); color: white; }
+        .hidden { display: none !important; }
+
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+        input, select, textarea { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 5px; font-family: inherit; }
+        .add-btn { background: #27ae60; color: white; border: none; padding: 0.8rem 2rem; border-radius: 5px; cursor: pointer; font-weight: 600; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { padding: 1.2rem; text-align: left; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        th { background: var(--dark-bg); color: white; text-transform: uppercase; letter-spacing: 1px; }
+        tr:hover { background: #f9f9f9; }
+        
+        .delete-btn { background: #e74c3c; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; transition: 0.3s; font-family: inherit; }
+        .delete-btn:hover { background: #c0392b; transform: scale(1.05); }
+        
+        .refresh-btn { background: var(--primary-color); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">Gilded<span>Fork</span> Admin</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Live Site</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="admin-section">
+        <div class="admin-tabs">
+            <button class="tab-btn active" id="menuTabBtn" onclick="switchTab('menu')">Menu Management</button>
+            <button class="tab-btn" id="resTabBtn" onclick="switchTab('reservations')">Reservation Management</button>
+            <button class="tab-btn" id="orderTabBtn" onclick="switchTab('orders')">Order Management</button>
+        </div>
+
+        <!-- Menu Management Card -->
+        <div class="admin-card" id="menuSection">
+            <div class="admin-header">
+                <h2>Menu Management</h2>
+            </div>
+            <form id="menuForm" onsubmit="handleMenuSubmit(event)">
+                <div class="form-grid">
+                    <input type="hidden" id="editId">
+                    <input type="text" id="itemName" placeholder="Dish Name" required>
+                    <input type="number" id="itemPrice" placeholder="Price ($)" step="0.01" required>
+                    <select id="itemCategory" required>
+                        <option value="appetizers">Appetizers</option>
+                        <option value="mains">Main Course</option>
+                    </select>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem;">
+                        <input type="checkbox" id="itemSpecial" style="width: auto;"> Special of the Day
+                    </label>
+                    <input type="text" id="itemImage" placeholder="Image URL (Unsplash Link)">
+                </div>
+                <textarea id="itemDesc" placeholder="Dish Description" rows="2" style="margin-bottom: 1rem;"></textarea>
+                <button type="submit" class="add-btn" id="menuSubmitBtn">Add to Menu</button>
+                <button type="button" class="delete-btn hidden" id="cancelEditBtn" onclick="cancelEdit()">Cancel Edit</button>
+            </form>
+            <table style="margin-top: 2rem;">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="menuTable"></tbody>
+            </table>
+        </div>
+
+        <div class="admin-card hidden" id="reservationSection">
+            <div class="admin-header">
+                <h2>Reservation Management</h2>
+                <button class="refresh-btn" onclick="fetchReservations()">Refresh List</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Guest Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Guests</th>
+                        <th>Contact</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="reservationsTable">
+                    <!-- Data will be injected here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Order Management Card -->
+        <div class="admin-card hidden" id="orderSection">
+            <div class="admin-header">
+                <h2>Order Management</h2>
+                <button class="refresh-btn" onclick="fetchOrders()">Refresh List</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Contact</th>
+                        <th>Address</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTable"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <script>
+        let adminPassword = sessionStorage.getItem('adminPassword');
+
+        function switchTab(tab) {
+            document.querySelectorAll('.admin-card').forEach(card => card.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            if (tab === 'menu') {
+                document.getElementById('menuSection').classList.remove('hidden');
+                document.getElementById('menuTabBtn').classList.add('active');
+            } else if (tab === 'reservations') {
+                document.getElementById('reservationSection').classList.remove('hidden');
+                document.getElementById('resTabBtn').classList.add('active');
+            } else if (tab === 'orders') {
+                document.getElementById('orderSection').classList.remove('hidden');
+                document.getElementById('orderTabBtn').classList.add('active');
+                fetchOrders();
+            }
+        }
+
+        async function fetchReservations() {
+            if (!adminPassword) {
+                adminPassword = prompt("Please enter the admin password:");
+                if (!adminPassword) return;
+                sessionStorage.setItem('adminPassword', adminPassword);
+            }
+
+            const res = await fetch('http://localhost:3000/api/reservations', {
+                headers: { 'x-admin-password': adminPassword }
+            });
+
+            if (res.status === 401) {
+                alert("Incorrect password.");
+                sessionStorage.removeItem('adminPassword');
+                adminPassword = null;
+                return fetchReservations();
+            }
+
+            const data = await res.json();
+            const container = document.getElementById('reservationsTable');
+            container.innerHTML = data.map(item => `
+                <tr>
+                    <td><strong>${item.customer_name}</strong></td>
+                    <td>${item.reservation_date}</td>
+                    <td>${item.reservation_time}</td>
+                    <td>${item.guest_count} persons</td>
+                    <td>${item.contact_number}</td>
+                    <td><button class="delete-btn" onclick="deleteRes(${item.id})">Remove</button></td>
+                </tr>
+            `).join('');
+        }
+
+        async function deleteRes(id) {
+            if (confirm('Are you sure you want to remove this reservation?')) {
+                await fetch(`http://localhost:3000/api/reservations/${id}`, { 
+                    method: 'DELETE',
+                    headers: { 'x-admin-password': adminPassword }
+                });
+                fetchReservations();
+            }
+        }
+
+        async function fetchOrders() {
+            const res = await fetch('http://localhost:3000/api/orders', {
+                headers: { 'x-admin-password': adminPassword }
+            });
+            
+            if (res.status === 401) return;
+            
+            const data = await res.json();
+            const container = document.getElementById('ordersTable');
+            container.innerHTML = data.map(item => `
+                <tr>
+                    <td><strong>${item.customer_name}</strong></td>
+                    <td>${item.contact_number}</td>
+                    <td>${item.delivery_address}</td>
+                    <td style="max-width: 200px;">${item.items}</td>
+                    <td>$${parseFloat(item.total_amount).toFixed(2)}</td>
+                    <td><button class="delete-btn" onclick="deleteOrder(${item.id})">Remove</button></td>
+                </tr>
+            `).join('');
+        }
+
+        async function deleteOrder(id) {
+            if (confirm('Are you sure you want to remove this order?')) {
+                await fetch(`http://localhost:3000/api/orders/${id}`, { 
+                    method: 'DELETE',
+                    headers: { 'x-admin-password': adminPassword }
+                });
+                fetchOrders();
+            }
+        }
+
+        let currentMenu = [];
+
+        async function fetchMenu() {
+            const res = await fetch('http://localhost:3000/api/menu');
+            currentMenu = await res.json();
+            const container = document.getElementById('menuTable');
+            container.innerHTML = currentMenu.map((item, index) => `
+                <tr>
+                    <td>${item.name} ${item.is_special ? '<span style="color: var(--primary-color); font-weight: bold;">★ Special</span>' : ''}</td>
+                    <td>${item.category}</td>
+                    <td>$${item.price}</td>
+                    <td>
+                        <button class="refresh-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="startEdit(${index})">Edit</button>
+                        <button class="delete-btn" onclick="deleteMenuItem(${item.id})">Remove</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function handleMenuSubmit(e) {
+            e.preventDefault();
+            const editId = document.getElementById('editId').value;
+            
+            const item = {
+                name: document.getElementById('itemName').value,
+                price: document.getElementById('itemPrice').value,
+                category: document.getElementById('itemCategory').value,
+                image_url: document.getElementById('itemImage').value,
+                description: document.getElementById('itemDesc').value,
+                is_special: document.getElementById('itemSpecial').checked
+            };
+
+            const url = editId ? `http://localhost:3000/api/menu/${editId}` : 'http://localhost:3000/api/menu';
+            const method = editId ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method: method,
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-admin-password': adminPassword 
+                },
+                body: JSON.stringify(item)
+            });
+
+            if (res.ok) {
+                cancelEdit();
+                fetchMenu();
+            }
+        }
+
+        function startEdit(index) {
+            const item = currentMenu[index];
+            document.getElementById('editId').value = item.id;
+            document.getElementById('itemName').value = item.name;
+            document.getElementById('itemPrice').value = item.price;
+            document.getElementById('itemCategory').value = item.category;
+            document.getElementById('itemImage').value = item.image_url;
+            document.getElementById('itemDesc').value = item.description;
+            document.getElementById('itemSpecial').checked = item.is_special;
+            
+            document.getElementById('menuSubmitBtn').textContent = 'Save Changes';
+            document.getElementById('cancelEditBtn').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function cancelEdit() {
+            document.getElementById('menuForm').reset();
+            document.getElementById('editId').value = '';
+            document.getElementById('menuSubmitBtn').textContent = 'Add to Menu';
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+        }
+
+        async function deleteMenuItem(id) {
+            if (confirm('Remove this dish from the menu?')) {
+                await fetch(`http://localhost:3000/api/menu/${id}`, { 
+                    method: 'DELETE',
+                    headers: { 'x-admin-password': adminPassword }
+                });
+                fetchMenu();
+            }
+        }
+
+        window.onload = () => { fetchReservations(); fetchMenu(); };
+    </script>
+</body>
+</html>
