@@ -9,7 +9,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+if (!process.env.SUPABASE_URL || !process.env.SUPABASE_KEY) {
+    console.error("CRITICAL: Supabase environment variables are missing!");
+}
+
+const supabase = createClient(
+    process.env.SUPABASE_URL || '', 
+    process.env.SUPABASE_KEY || ''
+);
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 
