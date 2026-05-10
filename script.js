@@ -4,8 +4,16 @@ const navLinks = document.getElementById('navLinks');
 
 if (hamburger) {
     hamburger.addEventListener('click', () => {
-        // Basic toggle logic - can be expanded with CSS classes
-        alert('Mobile menu clicked! In a production app, this would slide out the navigation.');
+        navLinks.classList.toggle('active');
+        hamburger.classList.toggle('active');
+    });
+}
+
+// Close mobile menu when a link is clicked
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        hamburger.classList.remove('active');
     });
 }
 

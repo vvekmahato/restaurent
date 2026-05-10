@@ -411,9 +411,38 @@ footer {
 
 @media (max-width: 768px) {
     .nav-links {
-        display: none; /* Logic for toggle can be added in JS */
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: var(--dark-bg);
+        padding: 1rem 0;
+        text-align: center;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .nav-links.active {
+        display: flex;
+    }
+    .nav-links li a {
+        margin: 1rem 0;
+        display: block;
+        margin-left: 0;
     }
     .hamburger {
         display: block;
+    }
+    .hamburger span {
+        transition: 0.3s;
+    }
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -7px);
     }
 }
