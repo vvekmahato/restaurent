@@ -265,6 +265,7 @@ footer {
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     transition: transform 0.3s;
+    animation: chatBounce 5s infinite;
 }
 
 /* Chat Callout Bubble */
@@ -273,16 +274,36 @@ footer {
     bottom: 85px;
     right: 0;
     background: white;
-    padding: 0.8rem 1.2rem;
+    padding: 0.8rem 2.2rem 0.8rem 1.2rem;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     font-size: 0.85rem;
-    white-space: nowrap;
+    white-space: normal;
+    width: max-content;
+    max-width: 260px;
     color: var(--dark-text);
     border-left: 4px solid var(--primary-color);
     z-index: 1999;
     animation: bubbleFadeIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     pointer-events: none;
+}
+
+.close-callout {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #888;
+    line-height: 1;
+    padding: 0;
+    pointer-events: auto;
+}
+
+.close-callout:hover {
+    color: var(--dark-text);
 }
 
 .chat-callout::after {
@@ -300,8 +321,15 @@ footer {
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+@keyframes chatBounce {
+    0%, 10%, 25%, 40%, 100% { transform: translateY(0); }
+    20% { transform: translateY(-12px); }
+    30% { transform: translateY(-6px); }
+}
+
 .chat-toggle-btn:hover {
     transform: scale(1.1);
+    animation: none;
 }
 
 .chat-window {
@@ -463,5 +491,15 @@ footer {
     }
     .hamburger.active span:nth-child(3) {
         transform: rotate(-45deg) translate(7px, -7px);
+    }
+
+    .chat-window {
+        width: calc(100vw - 40px);
+        max-width: 320px;
+    }
+
+    .chat-callout {
+        max-width: 180px;
+        font-size: 0.8rem;
     }
 }

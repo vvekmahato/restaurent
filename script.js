@@ -110,6 +110,7 @@ const sendChat = document.getElementById('sendChat');
 const chatBody = document.getElementById('chatBody');
 const chatSuggestions = document.getElementById('chatSuggestions');
 const chatCallout = document.getElementById('chatCallout');
+const closeCallout = document.getElementById('closeCallout');
 
 let chatHistory = [];
 
@@ -121,6 +122,13 @@ if (chatToggleBtn && chatWindow) {
 }
 
 if (closeChat) closeChat.addEventListener('click', () => chatWindow.style.display = 'none');
+
+if (closeCallout) {
+    closeCallout.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (chatCallout) chatCallout.style.display = 'none';
+    });
+}
 
 const addMessage = (text, sender) => {
     const msgDiv = document.createElement('div');

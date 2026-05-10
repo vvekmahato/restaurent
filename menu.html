@@ -11,10 +11,15 @@
     <header>
         <nav class="navbar">
             <div class="logo">Gilded<span>Fork</span></div>
-            <ul class="nav-links">
+            <ul class="nav-links" id="navLinks">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="index.html#contact">Contact</a></li>
             </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </nav>
     </header>
     <div class="nav-overlay" id="navOverlay"></div>
@@ -56,7 +61,10 @@
                 <button id="sendChat">Send</button>
             </div>
         </div>
-        <div class="chat-callout" id="chatCallout">Welcome sir, I'm your digital waiter! How can I help?</div>
+        <div class="chat-callout" id="chatCallout">
+            Welcome sir, I'm your digital waiter! How can I help?
+            <button id="closeCallout" class="close-callout">&times;</button>
+        </div>
         <button class="chat-toggle-btn" id="chatToggleBtn">🤵</button>
     </div>
 
