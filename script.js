@@ -1,11 +1,13 @@
 // Mobile Menu Toggle
 const hamburger = document.getElementById('hamburger');
 const navLinks = document.getElementById('navLinks');
+const navOverlay = document.getElementById('navOverlay');
 
 if (hamburger) {
     hamburger.addEventListener('click', () => {
         navLinks.classList.toggle('active');
         hamburger.classList.toggle('active');
+        if (navOverlay) navOverlay.classList.toggle('active');
     });
 }
 
@@ -14,6 +16,15 @@ document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('click', () => {
         navLinks.classList.remove('active');
         hamburger.classList.remove('active');
+        if (navOverlay) navOverlay.classList.remove('active');
+    });
+});
+
+if (navOverlay) {
+    navOverlay.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        hamburger.classList.remove('active');
+        navOverlay.classList.remove('active');
     });
 }
 
