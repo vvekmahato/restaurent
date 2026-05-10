@@ -11,7 +11,7 @@ if (hamburger) {
 
 // Load Dynamic Menu
 async function loadMenu() {
-    const res = await fetch('/api/menu');
+    const res = await fetch('http://localhost:3000/api/menu');
     const items = await res.json();
     
     const gridContainer = document.querySelector('.menu-grid');
@@ -114,7 +114,7 @@ const addMessage = (text, sender) => {
 
 const getAIResponse = async (history) => {
     try {
-        const response = await fetch('/api/chat', {
+        const response = await fetch('http://localhost:3000/api/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

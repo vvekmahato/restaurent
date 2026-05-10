@@ -154,7 +154,7 @@
                 sessionStorage.setItem('adminPassword', adminPassword);
             }
 
-            const res = await fetch('/api/reservations', {
+            const res = await fetch('http://localhost:3000/api/reservations', {
                 headers: { 'x-admin-password': adminPassword }
             });
 
@@ -181,7 +181,7 @@
 
         async function deleteRes(id) {
             if (confirm('Are you sure you want to remove this reservation?')) {
-                await fetch(`/api/reservations/${id}`, { 
+                await fetch(`http://localhost:3000/api/reservations/${id}`, { 
                     method: 'DELETE',
                     headers: { 'x-admin-password': adminPassword }
                 });
@@ -190,7 +190,7 @@
         }
 
         async function fetchOrders() {
-            const res = await fetch('/api/orders', {
+            const res = await fetch('http://localhost:3000/api/orders', {
                 headers: { 'x-admin-password': adminPassword }
             });
             
@@ -212,7 +212,7 @@
 
         async function deleteOrder(id) {
             if (confirm('Are you sure you want to remove this order?')) {
-                await fetch(`/api/orders/${id}`, { 
+                await fetch(`http://localhost:3000/api/orders/${id}`, { 
                     method: 'DELETE',
                     headers: { 'x-admin-password': adminPassword }
                 });
@@ -223,7 +223,7 @@
         let currentMenu = [];
 
         async function fetchMenu() {
-            const res = await fetch('/api/menu');
+            const res = await fetch('http://localhost:3000/api/menu');
             currentMenu = await res.json();
             const container = document.getElementById('menuTable');
             container.innerHTML = currentMenu.map((item, index) => `
@@ -252,8 +252,8 @@
                 is_special: document.getElementById('itemSpecial').checked
             };
 
-            const url = editId ? `/api/menu/${editId}` : '/api/menu';
-            const method = editId ? (editId ? 'PUT' : 'POST') : 'POST';
+            const url = editId ? `http://localhost:3000/api/menu/${editId}` : 'http://localhost:3000/api/menu';
+            const method = editId ? 'PUT' : 'POST';
 
             const res = await fetch(url, {
                 method: method,
@@ -294,7 +294,7 @@
 
         async function deleteMenuItem(id) {
             if (confirm('Remove this dish from the menu?')) {
-                await fetch(`/api/menu/${id}`, { 
+                await fetch(`http://localhost:3000/api/menu/${id}`, { 
                     method: 'DELETE',
                     headers: { 'x-admin-password': adminPassword }
                 });
