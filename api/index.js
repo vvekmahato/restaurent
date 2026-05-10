@@ -11,8 +11,6 @@ app.use(express.json());
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
-const PORT = process.env.PORT || 3000;
-
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 
 const authMiddleware = (req, res, next) => {
@@ -28,7 +26,6 @@ app.post('/api/chat', async (req, res) => {
     try {
         const { messages } = req.body;
 
-        // Fetch the latest menu from Supabase to inform the AI
         const { data: menuItems } = await supabase
             .from('menu_items')
             .select('name, price, category, description, is_special') || [];
@@ -70,178 +67,91 @@ app.post('/api/chat', async (req, res) => {
         });
 
         let data = await response.json();
-        
-        if (!data.choices || !data.choices[0]) {
-            throw new Error("Invalid response from AI API");
-        }
+        if (!data.choices || !data.choices[0]) throw new Error("Invalid response from AI API");
 
         let content = data.choices[0].message.content;
-
-        // Check if the AI output the reservation tag
         const reservationMatch = content.match(/\[RESERVATION: ([\s\S]*?)\]/);
         const orderMatch = content.match(/\[ORDER: ([\s\S]*?)\]/);
         
         if (reservationMatch) {
-            // Always remove the tag so the user doesn't see code
             let cleanContent = content.replace(/\[RESERVATION: [\s\S]*?\]/, '').trim();
-            
-            // Fallback if AI only sends the tag without text
-            if (!cleanContent) {
-                cleanContent = "Excellent! I have successfully booked your table. We look forward to seeing you!";
-            }
+            if (!cleanContent) cleanContent = "Excellent! I have successfully booked your table.";
             data.choices[0].message.content = cleanContent;
-
             try {
                 const reservationData = JSON.parse(reservationMatch[1]);
                 reservationData.guest_count = parseInt(reservationData.guest_count);
                 if (!isNaN(reservationData.guest_count)) {
-                    const { error } = await supabase.from('reservations').insert([reservationData]);
-                    if (error) console.error('Supabase Reservation Error:', error);
+                    await supabase.from('reservations').insert([reservationData]);
                 }
-            } catch (e) {
-                console.error('Failed to process reservation JSON:', e);
-            }
+            } catch (e) { console.error(e); }
         }
 
         if (orderMatch) {
-            // Always remove the tag
             let cleanContent = content.replace(/\[ORDER: [\s\S]*?\]/, '').trim();
-            
-            // Fallback if AI only sends the tag without text
-            if (!cleanContent) {
-                cleanContent = "Thank you! Your order has been placed successfully and is being prepared.";
-            }
+            if (!cleanContent) cleanContent = "Thank you! Your order has been placed.";
             data.choices[0].message.content = cleanContent;
-
             try {
                 const orderData = JSON.parse(orderMatch[1]);
                 orderData.total_amount = parseFloat(orderData.total_amount);
                 if (!isNaN(orderData.total_amount)) {
-                    const { error } = await supabase.from('orders').insert([orderData]);
-                    if (error) console.error('Supabase Order Error:', error);
+                    await supabase.from('orders').insert([orderData]);
                 }
-            } catch (e) {
-                console.error('Failed to process order JSON:', e);
-            }
+            } catch (e) { console.error(e); }
         }
 
         res.json(data);
     } catch (error) {
-        console.error('Error:', error);
         res.status(500).json({ error: 'Failed to fetch response from AI' });
     }
 });
 
-// Menu Management Endpoints
+// CRUD Endpoints
 app.get('/api/menu', async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('menu_items')
-            .select('*')
-            .order('category', { ascending: true });
-        if (error) throw error;
-        res.json(data);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    const { data, error } = await supabase.from('menu_items').select('*').order('category', { ascending: true });
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
 });
 
 app.post('/api/menu', authMiddleware, async (req, res) => {
-    try {
-        const { error } = await supabase.from('menu_items').insert([req.body]);
-        if (error) throw error;
-        res.json({ message: 'Item added successfully' });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    const { error } = await supabase.from('menu_items').insert([req.body]);
+    if (error) return res.status(500).json({ error: error.message });
+    res.json({ message: 'Item added successfully' });
 });
 
 app.put('/api/menu/:id', authMiddleware, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { error } = await supabase
-            .from('menu_items')
-            .update(req.body)
-            .eq('id', id);
-        if (error) throw error;
-        res.json({ message: 'Item updated successfully' });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    const { error } = await supabase.from('menu_items').update(req.body).eq('id', req.params.id);
+    if (error) return res.status(500).json({ error: error.message });
+    res.json({ message: 'Item updated successfully' });
 });
 
 app.delete('/api/menu/:id', authMiddleware, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { error } = await supabase
-            .from('menu_items')
-            .delete()
-            .eq('id', id);
-        if (error) throw error;
-        res.json({ message: 'Item deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    const { error } = await supabase.from('menu_items').delete().eq('id', req.params.id);
+    if (error) return res.status(500).json({ error: error.message });
+    res.json({ message: 'Item deleted successfully' });
 });
 
 app.get('/api/reservations', authMiddleware, async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('reservations')
-            .select('*')
-            .order('created_at', { ascending: false });
-        
-        if (error) throw error;
-        res.json(data);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    const { data, error } = await supabase.from('reservations').select('*').order('created_at', { ascending: false });
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
 });
 
 app.delete('/api/reservations/:id', authMiddleware, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { error } = await supabase
-            .from('reservations')
-            .delete()
-            .eq('id', id);
-        
-        if (error) throw error;
-        res.json({ message: 'Reservation deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    const { error } = await supabase.from('reservations').delete().eq('id', req.params.id);
+    if (error) return res.status(500).json({ error: error.message });
+    res.json({ message: 'Reservation deleted successfully' });
 });
 
 app.get('/api/orders', authMiddleware, async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('orders')
-            .select('*')
-            .order('created_at', { ascending: false });
-        
-        if (error) throw error;
-        res.json(data);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    const { data, error } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
 });
 
 app.delete('/api/orders/:id', authMiddleware, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { error } = await supabase
-            .from('orders')
-            .delete()
-            .eq('id', id);
-        
-        if (error) throw error;
-        res.json({ message: 'Order deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    const { error } = await supabase.from('orders').delete().eq('id', req.params.id);
+    if (error) return res.status(500).json({ error: error.message });
+    res.json({ message: 'Order deleted successfully' });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+module.exports = app;
