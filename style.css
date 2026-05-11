@@ -255,23 +255,28 @@ footer {
 }
 
 .chat-toggle-btn {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: var(--primary-color);
+    width: 80px;
+    height: 80px;
+    background: transparent;
     color: white;
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     transition: transform 0.3s;
     animation: chatBounce 5s infinite;
+}
+
+.chat-toggle-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
 }
 
 /* Chat Callout Bubble */
 .chat-callout {
     position: absolute;
-    bottom: 85px;
+    bottom: 105px;
     right: 0;
     background: white;
     padding: 0.8rem 2.2rem 0.8rem 1.2rem;
@@ -341,7 +346,7 @@ footer {
     border-radius: 12px;
     box-shadow: 0 5px 25px rgba(0,0,0,0.2);
     position: absolute;
-    bottom: 80px;
+    bottom: 100px;
     right: 0;
     overflow: hidden;
 }
